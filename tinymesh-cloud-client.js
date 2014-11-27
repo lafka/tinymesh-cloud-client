@@ -39,8 +39,9 @@ var api = function(endpoint) {
 	 *
 	 */
 	auth.info = function(opts) {
-		return request.get(endpoint + '/auth')
-		              .sign(opts.auth.fingerprint, opts.auth.key)
+		return request
+			.get(endpoint + '/auth')
+			.sign(opts.auth.fingerprint, opts.auth.key)
 	};
 
 	/**
@@ -51,8 +52,9 @@ var api = function(endpoint) {
 	 * usage: auth.login('dev@tiny-mesh.com', '123456789').
 	 */
 	auth.login = function(user, password, opts) {
-		return request.post(endpoint + '/auth/session')
-		              .send({email: user, password: password})
+		return request
+			.post(endpoint + '/auth/session')
+			.send({email: user, password: password})
 	};
 
 
@@ -62,8 +64,9 @@ var api = function(endpoint) {
 	 * Destroy the current session
 	 */
 	auth.logout = function(opts) {
-		return request.del(endpoint + '/auth/session')
-		              .sign(opts.auth.fingerprint, opts.auth.key)
+		return request
+			.del(endpoint + '/auth/session')
+			.sign(opts.auth.fingerprint, opts.auth.key)
 	};
 
 	/**
@@ -77,8 +80,9 @@ var api = function(endpoint) {
 	 * Fetch the authenticated user
 	 */
 	user.get = function(opts) {
-		return request.get(endpoint + '/user')
-		              .sign(opts.auth.fingerprint, opts.auth.key)
+		return request
+			.get(endpoint + '/user')
+			.sign(opts.auth.fingerprint, opts.auth.key)
 	};
 
 
@@ -88,9 +92,10 @@ var api = function(endpoint) {
 	 * Updates the authenticated user
 	 */
 	user.update = function(payload, opts) {
-		return request.put(endpoint + '/user')
-		              .send(payload)
-		              .sign(opts.auth.fingerprint, opts.auth.key)
+		return request
+			.put(endpoint + '/user')
+			.send(payload)
+			.sign(opts.auth.fingerprint, opts.auth.key)
 	};
 
 	return {
