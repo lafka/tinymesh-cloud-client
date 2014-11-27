@@ -98,6 +98,17 @@ var api = function(endpoint) {
 			.sign(opts.auth.fingerprint, opts.auth.key)
 	};
 
+	/**
+	 * POST /user/register
+	 *
+	 * Creates a new user
+	 */
+	user.register = function(payload, opts) {
+		return request
+			.post(endpoint + '/user/register')
+			.send(payload)
+	};
+
 	return {
 		auth: auth,
 		user: user
