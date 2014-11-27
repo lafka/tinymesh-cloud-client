@@ -1,0 +1,16 @@
+{
+	"name": "tinymesh-cloud-client",
+	"description": "Tiny Mesh Cloud Client",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/tinymesh/cloud-client"
+	},
+	"version": "0.0.0",
+	"dependencies": {
+		"superagent-promise": "*",
+		"crypto-js": "*"
+	},
+	"devDependencies": {
+		"requirejs": "*"
+	}
+}
