@@ -328,6 +328,12 @@ var _ = _ || require('lodash'),
 				if (!endpoint)
 					throw new Error("no endpoint specified: " + JSON.stringify(opt));
 
+				var endpointArgs = _.map(_.filter(endpoint, _.isObject), function(val) {
+					return val.param
+				})
+				var filterEndpointArgs = function(qopts) {
+					return _.omit(qopts, endpointArgs)
+				}
 
 				switch (method) {
 					case "get":
@@ -356,6 +362,7 @@ var _ = _ || require('lodash'),
 
 								proto = proto
 									.set('Content-Type', 'application/json')
+									.query(filterEndpointArgs(qopts))
 									.decorate(_.merge(_.cloneDeep(config), opt).decoration || {});
 
 								return _.foldl(plugins, function(res, plugin) {
@@ -428,7 +435,12 @@ var _ = _ || require('lodash'),
 		if (serialize)
 			payload = serialize(this._data);
 
-		buf = [this.method, this.url, payload].join("\n");
+		this._query = _.map(this._query, function(val) {
+			return window.decodeURIComponent(val)
+		});
+		url = this.url + (this._query.length > 0 ? '?' + this._query.join('&') : '')
+
+		buf = [this.method, url, payload].join("\n");
 		sig = hmac(buf, key || "").toString(base64);
 
 		this.set('X-Token', Math.random().toString(36).substring(2));
@@ -502,6 +514,7 @@ var _ = _ || require('lodash'),
 
 		api.message = api.resource('Message', {
 			'create': {method: 'POST', stateful: false, endpoint: ['/message', {param: 'network'}, {param: 'device'}]},
+			'query': {method: 'GET',  stateful: false, endpoint: ['/message-query', {param: 'network'}, {param: 'device'}]},
 			'stream': {method: 'GET',  stateful: false, endpoint: ['/message-query', {param: 'network'}, {param: 'device'}], stream: true, evhandlers: {msg: undefined, ping: undefined}},
 		}, [sign, stream]);
 
