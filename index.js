@@ -313,8 +313,11 @@ var _ = _ || require('lodash'),
 				if (!endpoint.stateful)
 					return;
 
-				obj.prototype["$" + k] = function(opts, qopts) {
-					return resource[k](opts, this, qopts);
+				obj.prototype["$" + k] = function(opts, dataOrQopts, qopts) {
+					if (3 === arguments.length)
+						return resource[k](opts, dataOrQopts, qopts);
+					else
+						return resource[k](opts, this, dataOrQopts);
 				};
 			}, {});
 
