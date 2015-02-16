@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/tinymesh/cloud-client",
   "_id": "tinymesh-cloud-client@0.0.0",
-  "_shasum": "c62eb7b484e325979e577420c2e058210715b105",
-  "_from": "../../../../../tmp/npm-22111-46f2910b/1421269536642-0.6900821684394032/3c38fac12c5c12a29436061384e8afcc5eeba321",
-  "_resolved": "git://github.com/lafka/tinymesh-cloud-client#3c38fac12c5c12a29436061384e8afcc5eeba321"
+  "_shasum": "d220c9a45697c84c06dfed2185435d5718bbe39f",
+  "_from": "../../../../../tmp/npm-3999-f2bf6d7a/1423607622900-0.32226724177598953/579dd728ee68b603d062b6dc8bdc957aecd63154",
+  "_resolved": "git://github.com/lafka/tinymesh-cloud-client#579dd728ee68b603d062b6dc8bdc957aecd63154"
 }

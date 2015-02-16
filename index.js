@@ -81,7 +81,6 @@ var _ = _ || require('lodash'),
 
 			var ctx = this;
 
-			console.log('req: ' + this.method.toUpperCase() + ' ' + this.url);
 			var oldpromise = res.$promise;
 			res.$promise = new Promise(function(resolve, reject) {
 				if (ctx.decoration.before.length > 0)
@@ -478,7 +477,7 @@ var _ = _ || require('lodash'),
 		api.network.name = "";
 
 		api.network.$obj.prototype.hasChannels = function() {
-			return Object.keys(this.channels).length > 0;
+			return Object.keys(this.channels || {}).length > 0;
 		};
 
 		api.network.$obj.prototype.haveConnected = function() {
@@ -494,9 +493,9 @@ var _ = _ || require('lodash'),
 		};
 
 		api.device = api.resource('Device', {
-			'get':    {method: 'GET',    stateful: true, endpoint: ['/network/', {param: 'key'}]},
+			'get':    {method: 'GET',    stateful: true, endpoint: ['/device', {param: 'network'}, {param: 'key'}]},
 			'create': {method: 'POST',   stateful: true, endpoint: ['/device', {param: 'network'}]},
-			'update': {method: 'POST',   stateful: true, endpoint: ['/device', {param: 'network'}]},
+			'update': {method: 'PUT',   stateful: true, endpoint: ['/device', {param: 'network'}, {param: 'key'}]},
 			'sync':   {method: 'PUT',    stateful: true, endpoint: ['/device', {param: 'network'}, {param: 'key'}], patch: false},
 			'delete': {method: 'DELETE', stateful: true, endpoint: ['/device', {param: 'network'}, {param: 'key'}]},
 		}, [sign]);
