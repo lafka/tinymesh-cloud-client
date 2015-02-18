@@ -405,10 +405,34 @@ var _ = _ || require('lodash'),
 		};
 	};
 
+	var sse = require('./sse.js')
 	var stream = function(opts) {
 		if (!opts.stream)
 			return this;
 
+		this._query = _.map(this._query, function(val) {
+			return window.decodeURIComponent(val)
+		});
+
+		this._query.push("authorization=" + window.encodeURI(this.header.Authorization))
+		url = this.url + (this._query.length > 0 ? '?' + this._query.join('&') : '')
+
+		this.end = function() {
+			var
+				_handlers = 0,
+				evhandler = new sse(url)
+
+			_.each(opts.evhandlers, function(v, k) {
+				if (!v)
+					v = _.noop
+
+				evhandler.on(k, v)
+			})
+
+			this.evhandler = evhandler
+
+			return this
+		}
 		return this;
 	};
 
@@ -515,7 +539,7 @@ var _ = _ || require('lodash'),
 		api.message = api.resource('Message', {
 			'create': {method: 'POST', stateful: false, endpoint: ['/message', {param: 'network'}, {param: 'device'}]},
 			'query': {method: 'GET',  stateful: false, endpoint: ['/message-query', {param: 'network'}, {param: 'device'}]},
-			'stream': {method: 'GET',  stateful: false, endpoint: ['/message-query', {param: 'network'}, {param: 'device'}], stream: true, evhandlers: {msg: undefined, ping: undefined}},
+			'stream': {method: 'GET',  stateful: false, endpoint: ['/message-query', {param: 'network'}, {param: 'device'}], stream: true, evhandlers: {msg: undefined, ping: undefined, error: undefined}},
 		}, [sign, stream]);
 
 		return api;
