@@ -11,9 +11,6 @@
     "superagent": "*",
     "eventemitter2": "*"
   },
-  "devDependencies": {
-    "requirejs": "*"
-  },
   "gitHead": "3c38fac12c5c12a29436061384e8afcc5eeba321",
   "readme": "# I am cloud\n\nThe Tinymesh Cloud Client. Still much a work in progress.\n",
   "readmeFilename": "README.md",
