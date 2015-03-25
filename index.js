@@ -41,8 +41,8 @@ var _ = _ || require('lodash'),
 
 		var config = baseopts;
 		config.decoration = config.decoration || {};
-		config.decoration.after = config.decoration.after || {};
-		config.decoration.before = config.decoration.before || {};
+		config.decoration.after = config.decoration.after || [];
+		config.decoration.before = config.decoration.before || [];
 		config.endpoint = config.endpoint || "https://http.cloud.tiny-mesh.com/v1";
 
 		// Simple config for dependency injection
@@ -57,6 +57,7 @@ var _ = _ || require('lodash'),
 
 		// Inherit form superagent.Request
 		ResourceAgent.prototype = Object.create(superagent.Request.prototype)
+		ResourceAgent.prototype.$config = this.$config
 
 		// enable decoration
 		ResourceAgent.prototype.decoration = {before: [], after: []};
@@ -112,7 +113,7 @@ var _ = _ || require('lodash'),
 						default:
 							console.log("error: " + value.status, value.body)
 							if (oldpromise && oldpromise.$reject)
-								oldpromise.$reject.call(value, res);
+								oldpromise.$reject.call(this, value);
 							return reject.call(this, value);
 					}
 				});
@@ -125,7 +126,7 @@ var _ = _ || require('lodash'),
 					}
 				}, function(req, val) {
 					for (var i in ctx.decoration.after) {
-						ctx.decoration.after[i].call(ctx, val, res);
+						ctx.decoration.after[i].call(ctx, req, val);
 					}
 				});
 
@@ -473,8 +474,12 @@ var _ = _ || require('lodash'),
 		return this;
 	};
 
-	function API() {
-		api = new BaseAPI({sign: true, stateful: true, patch: true});
+	function API(opts) {
+		opts.sign = true
+		opts.stateful =  true
+		opts.patch = true
+
+		api = new BaseAPI(opts);
 		api.auth = api.resource('Auth', {
 			'info':   {method: 'GET',    stateful: true, endpoint: '/auth'},
 			'login':  {method: 'POST',   stateful: true, endpoint: '/auth/session', sign: false},
@@ -545,5 +550,18 @@ var _ = _ || require('lodash'),
 		return api;
 	};
 
-	module.exports = new API();
+	module.exports = new API({
+		decoration: {
+			after: [
+				function(req, val) {
+					if (401 === this.xhr.status) {
+						var callback = this.$config.get('onUnauthorized')
+						if (callback)
+							callback()
+					}
+				}
+			]
+		}
+
+	});
 })();
