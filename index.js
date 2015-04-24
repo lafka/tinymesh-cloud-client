@@ -497,7 +497,8 @@ var _ = _ || require('lodash'),
 		api.user.email = "";
 
 		api.organization = api.resource('Organization', {
-			'list':   {method: 'GET', stateful: false, endpoint: '/organization', isArray: true},
+			'create': {method: 'POST', stateful: false, endpoint: '/organization', isArray: true},
+			'list':   {method: 'GET', stateful: false, endpoint: '/organization'},
 			'get':    {method: 'GET', stateful: true, endpoint: ['/organization', {param: 'key'}]},
 			'update': {method: 'GET', stateful: true, endpoint: ['/organization', {param: 'key'}]},
 			'sync':   {method: 'GET', stateful: true, endpoint: ['/organization', {param: 'key'}], patch: false},
